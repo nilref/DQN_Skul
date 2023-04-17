@@ -19,23 +19,23 @@ import Tool.Actions
 from Tool.Helper import mean, is_end
 from Tool.Actions import take_action, restart,take_direction, TackAction
 from Tool.WindowsAPI import grab_screen
-from Tool.GetHP import Hp_getter
+from Tool.PlayerData import Hp_getter
 from Tool.UserInput import User
 from Tool.FrameBuffer import FrameBuffer
 
-window_size = (0,0,1280, 720)
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+# window_size = (0,0,1280, 720)
 station_size = (5, 30, 1285, 750)
 
-HP_WIDTH = 768
-HP_HEIGHT = 407
 WIDTH = 400
 HEIGHT = 200
-ACTION_DIM = 4
+ACTION_DIM = 5
+MOVE_DIM = 6
 FRAMEBUFFERSIZE = 4
 INPUT_SHAPE = (FRAMEBUFFERSIZE, HEIGHT, WIDTH, 3)
 
 LEARN_FREQ = 30  # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
-MEMORY_SIZE = 200  # replay memory的大小，越大越占用内存
+MEMORY_SIZE = 256  # replay memory的大小，越大越占用内存
 MEMORY_WARMUP_SIZE = 24  # replay_memory 里需要预存一些经验数据，再从里面sample一个batch的经验让agent去learn
 BATCH_SIZE = 24  # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
 LEARNING_RATE = 0.00001  # 学习率
@@ -55,16 +55,18 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True      #程序按需申请内存
     sess = tf.compat.v1.Session(config = config)
 
+    devices = sess.list_devices()
+    for d in devices:
+      print(d.name)
+
     PASS_COUNT = 0                                       # pass count
     total_remind_hp = 0
 
     act_rmp_correct = ReplayMemory(MEMORY_SIZE, file_name='./act_memory')         # experience pool
-    act_rmp_wrong = ReplayMemory(MEMORY_SIZE, file_name='./act_memory')         # experience pool
     move_rmp_correct = ReplayMemory(MEMORY_SIZE,file_name='./move_memory')         # experience pool
-    move_rmp_wrong = ReplayMemory(MEMORY_SIZE,file_name='./move_memory')         # experience pool
     
     # new model, if exit save file, load it
-    model = Model(INPUT_SHAPE, ACTION_DIM)  
+    model = Model(INPUT_SHAPE, ACTION_DIM, MOVE_DIM)  
 
     # Hp counter
     hp = Hp_getter()
@@ -88,7 +90,7 @@ if __name__ == '__main__':
         act_rmp_correct.load(file_name)
         for i in range(10):
             if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
-                # print("action learning")
+                print("action learning")
                 batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
                 algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
 
@@ -97,7 +99,7 @@ if __name__ == '__main__':
         move_rmp_correct.load(file_name)
         for i in range(10):
             if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
-                # print("action learning")
+                print("action learning")
                 batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
                 algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
 

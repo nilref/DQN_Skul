@@ -19,15 +19,13 @@ import Tool.Actions
 from Tool.Helper import mean, is_end
 from Tool.Actions import take_action, restart,take_direction, TackAction
 from Tool.WindowsAPI import grab_screen
-from Tool.GetHP import Hp_getter
+from Tool.PlayerData import Hp_getter
 from Tool.UserInput import User
 from Tool.FrameBuffer import FrameBuffer
 
-window_size = (0,0,1280, 720)
+# window_size = (0,0,1280, 720)
 station_size = (5, 30, 1285, 750)
 
-HP_WIDTH = 768
-HP_HEIGHT = 407
 WIDTH = 400
 HEIGHT = 200
 ACTION_DIM = 4

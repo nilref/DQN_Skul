@@ -32,12 +32,8 @@ class DQN:
         with tf.GradientTape() as tape:
             # 计算 Q(s,a) 与 target_Q的均方差，得到loss
             predictions = self.act_model(features,training=True)
-            print("act_train_step action:", action)
-            print("predictions:", predictions)
             enum_action = list(enumerate(action))
-            print("enum_action:",enum_action)
             pred_action_value = tf.gather_nd(predictions,indices=enum_action)
-            print("pred_action_value:",pred_action_value)
             loss = self.act_model.loss_func(labels,pred_action_value)
         gradients = tape.gradient(loss,self.act_model.trainable_variables)
         self.act_model.optimizer.apply_gradients(zip(gradients,self.act_model.trainable_variables))
@@ -100,12 +96,8 @@ class DQN:
         with tf.GradientTape() as tape:
             # 计算 Q(s,a) 与 target_Q的均方差，得到loss
             predictions = self.move_model(features,training=True)
-            print("move_train_step action:", action)
-            print("predictions:", predictions)
             enum_action = list(enumerate(action))
-            print("enum_action:",enum_action)
             pred_action_value = tf.gather_nd(predictions,indices=enum_action)
-            print("pred_action_value:", pred_action_value)
             loss = self.move_model.loss_func(labels,pred_action_value)
         gradients = tape.gradient(loss,self.move_model.trainable_variables)
         self.move_model.optimizer.apply_gradients(zip(gradients,self.move_model.trainable_variables))

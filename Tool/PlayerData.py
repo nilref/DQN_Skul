@@ -68,17 +68,31 @@ class Hp_getter():
         return offset_address.value
 
 
+    # def get_enemies_count(self):
+    #     base_address = self.mono + 0x00498DA8
+    #     offset_address = ctypes.c_longlong()
+    #     nSize = ctypes.sizeof(offset_address)
+    #     offset_list = [0xB0, 0xD18, 0x1A0] #偏移量数组，去掉最后一位偏移数值，单独处理
+    #     self.kernal32.ReadProcessMemory(int(self.process_handle), ctypes.c_void_p(base_address), ctypes.byref(offset_address), nSize, None)
+    #     for offset in offset_list:
+    #       self.kernal32.ReadProcessMemory(int(self.process_handle), ctypes.c_void_p(offset_address.value + offset), ctypes.byref(offset_address), nSize, None)
+    #     memory_value = ctypes.c_long()
+    #     vSize = ctypes.sizeof(memory_value)
+    #     last_offset = 0x1E8 # 最后的偏移量
+    #     self.kernal32.ReadProcessMemory(int(self.process_handle), ctypes.c_void_p(offset_address.value + last_offset), ctypes.byref(memory_value), vSize, None)
+    #     return memory_value.value
+      
     def get_enemies_count(self):
-        base_address = self.mono + 0x00498DA8
+        base_address = self.mono + 0x004A84B0
         offset_address = ctypes.c_longlong()
         nSize = ctypes.sizeof(offset_address)
-        offset_list = [0xB0, 0xD18, 0x1A0] #偏移量数组，去掉最后一位偏移数值，单独处理
+        offset_list = [0x2B0, 0xD18, 0x110, 0x28, 0x2A0] #偏移量数组，去掉最后一位偏移数值，单独处理
         self.kernal32.ReadProcessMemory(int(self.process_handle), ctypes.c_void_p(base_address), ctypes.byref(offset_address), nSize, None)
         for offset in offset_list:
           self.kernal32.ReadProcessMemory(int(self.process_handle), ctypes.c_void_p(offset_address.value + offset), ctypes.byref(offset_address), nSize, None)
         memory_value = ctypes.c_long()
         vSize = ctypes.sizeof(memory_value)
-        last_offset = 0x1E8 # 最后的偏移量
+        last_offset = 0x68 # 最后的偏移量
         self.kernal32.ReadProcessMemory(int(self.process_handle), ctypes.c_void_p(offset_address.value + last_offset), ctypes.byref(memory_value), vSize, None)
         return memory_value.value
       

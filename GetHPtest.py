@@ -1,4 +1,4 @@
-from Tool.GetHP import Hp_getter
+from Tool.PlayerData import Hp_getter
 
 hp = Hp_getter()
 

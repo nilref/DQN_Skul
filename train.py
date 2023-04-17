@@ -19,15 +19,15 @@ import Tool.Actions
 from Tool.Helper import mean, is_end
 from Tool.Actions import take_action, restart, play, take_direction, TackAction
 from Tool.WindowsAPI import grab_screen
-from Tool.GetHP import Hp_getter
+from Tool.PlayerData import Hp_getter
 from Tool.UserInput import User
 from Tool.FrameBuffer import FrameBuffer
 
-window_size = (0,0,1280, 720)
+# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+
+# window_size = (0,0,1280, 720)
 station_size = (5, 30, 1285, 750)
 
-HP_WIDTH = 768
-HP_HEIGHT = 407
 WIDTH = 400
 HEIGHT = 200
 ACTION_DIM = 5
@@ -198,15 +198,11 @@ def run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct,PASS_COUNT
         if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
             print("move learning while end game")
             batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
-            print("move batch_station:",batch_station)
-            print("move batch_actions:",batch_actions)
             algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)   
 
         if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
             print("action learning while end game")
             batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
-            print("act batch_station:",batch_station)
-            print("act batch_actions:",batch_actions)
             algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
     # if (len(move_rmp_wrong) > MEMORY_WARMUP_SIZE):
     #     # print("move learning")

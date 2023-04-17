@@ -1,6 +1,6 @@
 import cv2
 import time
-from Tool.GetHP import Hp_getter
+from Tool.PlayerData import Hp_getter
 from Tool.UserInput import User
 from Tool.WindowsAPI import grab_screen
 from Tool.Actions import take_action, restart, take_direction,Attack
