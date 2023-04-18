@@ -48,11 +48,14 @@ move_name = ["Move_Left", "Move_Right", "Turn_Left", "Turn_Right", "Turn_Up", "T
 DELAY_REWARD = 1
 
 def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_COUNT, paused, LAST_DONE):
-    Tool.Actions.Reload_Map()
-    # 重新开始新游戏，返回城堡
-    # restart(hp.get_self_hp(),hp.get_enemies_count())
-    # #从城堡出发
-    # play()
+    if LAST_DONE == 0 or LAST_DONE == 1:
+        # 重新开始新游戏，返回城堡
+        restart(hp.get_self_hp(),hp.get_enemies_count())
+        # 从城堡出发
+        play()
+    else:
+        Tool.Actions.Reload_Map()
+
     # learn while load game
     # for i in range(8):
     #     if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):

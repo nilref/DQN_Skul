@@ -170,20 +170,50 @@ def play():
     Interact()
 
 def Reload_Map():
-    # 打开开发者菜单
+    # 打开开发者菜单，切换地图
     OpenDevMenu()
     time.sleep(0.1)
-    # 向下一次
     Turn_Down()
     time.sleep(0.1)
-    # 向右一次
     Turn_Right()
     time.sleep(0.1)
     # 按C键确认
     Jump()
     time.sleep(0.1)
+    # 利用开发者工具恢复hp
+    Turn_Left()
+    time.sleep(0.1)
+    Turn_Up()
+    time.sleep(0.1)
+    Jump()
+    time.sleep(0.1)
+    Turn_Down()
+    time.sleep(0.1)
+    Turn_Down()
+    time.sleep(0.1)
+    Turn_Down()
+    time.sleep(0.1)
+    Turn_Right()
+    time.sleep(0.1)
+    Turn_Right()
+    time.sleep(0.1)
+    Turn_Right()
+    time.sleep(0.1)
+    Jump()
+    time.sleep(0.1)
+    Jump()
+    time.sleep(0.1)
+    # 恢复hp之后，切回地图列表页
+    OpenDevMenu()
+    time.sleep(0.1)
+    OpenDevMenu()
+    time.sleep(0.1)
+    Jump()
+    time.sleep(0.1)
     # 再次触发该函数，就是关闭开发者菜单
     OpenDevMenu()
+    
+    
     
 # 将开发者菜单调节至地图选择页面
 def Init_DevMenu_T0_MapSelect():
