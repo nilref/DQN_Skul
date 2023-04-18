@@ -23,7 +23,7 @@ from Tool.PlayerData import Hp_getter
 from Tool.UserInput import User
 from Tool.FrameBuffer import FrameBuffer
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 # window_size = (0,0,1280, 720)
 station_size = (5, 30, 1285, 750)
 
