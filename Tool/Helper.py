@@ -117,12 +117,15 @@ def move_judge(self_blood, next_self_blood):
 def action_judge(self_blood, next_self_blood, enemies_count, next_enemies_count):
     self_blood_reward = count_self_reward(next_self_blood, self_blood)
     enemies_count_reward = count_enemies_count_reward(next_enemies_count, enemies_count)
-    if(next_self_blood <= 0):
+    if next_self_blood <= 0:
         # 玩家死亡
         done = 1
-    elif(next_enemies_count <= 0):
+    elif next_enemies_count <= 0:
         # 敌人杀光
         done = 2
+    elif next_self_blood <= 20:
+        # 玩家hp低于安全线
+        done = 4
     else:
         # 继续游戏
         done = 0

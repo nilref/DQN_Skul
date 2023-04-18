@@ -8,6 +8,9 @@ import cv2
 import threading
 
 # Hash code for key we may use: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes?redirectedfrom=MSDN
+L_MOUSE_BTN = 0x01
+R_MOUSE_BTN = 0x02
+
 UP_ARROW = 0x26
 DOWN_ARROW = 0x28
 LEFT_ARROW = 0x25
@@ -16,6 +19,9 @@ RIGHT_ARROW = 0x27
 L_SHIFT = 0xA0
 
 ESC = 0x1B
+
+F1=0x70
+F2=0x71
 
 A = 0x41
 S = 0x53
@@ -115,114 +121,18 @@ def Esc():
     PressKey(ESC)
     time.sleep(0.2)
     ReleaseKey(ESC)
+
+# 打开开发者菜单
+def OpenDevMenu():
+    PressKey(F2)
+    time.sleep(0.2)
+    ReleaseKey(F2)
     
+# F键
 def Interact():
     PressKey(F)
     time.sleep(0.1)
     ReleaseKey(F)
-# 1
-# def Attack_Down():
-#     PressKey(DOWN_ARROW)
-#     PressKey(X)
-#     time.sleep(0.05)
-#     ReleaseKey(X)
-#     ReleaseKey(DOWN_ARROW)
-#     time.sleep(0.01)
-# 1
-# def Attack_Up():
-#     # print("Attack up--->")
-#     PressKey(UP_ARROW)
-#     PressKey(X)
-#     time.sleep(0.11)
-#     ReleaseKey(X)
-#     ReleaseKey(UP_ARROW)
-#     Nothing()
-#     time.sleep(0.01)
-
-# # 2
-# def Double_Jump():
-#     PressKey(C)
-#     time.sleep(0.2)
-#     ReleaseKey(C)
-#     time.sleep(0.2)
-#     PressKey(C)
-#     time.sleep(0.2)
-#     ReleaseKey(C)
-#     Nothing()
-
-# Skill
-# 4
-# def Skill():
-#     PressKey(Z)
-#     PressKey(X)
-#     time.sleep(0.1)
-#     ReleaseKey(Z)
-#     ReleaseKey(X)
-#     time.sleep(0.01)
-# 4
-# def Skill_Up():
-#     PressKey(UP_ARROW)
-#     PressKey(Z)
-#     PressKey(X)
-#     time.sleep(0.15)
-#     ReleaseKey(UP_ARROW)
-#     ReleaseKey(Z)
-#     ReleaseKey(X)
-#     Nothing()
-#     time.sleep(0.15)
-# 5
-# def Skill_Down():
-#     PressKey(DOWN_ARROW)
-#     PressKey(Z)
-#     PressKey(X)
-#     time.sleep(0.2)
-#     ReleaseKey(X)
-#     ReleaseKey(DOWN_ARROW)
-#     ReleaseKey(Z)
-#     Nothing()
-#     time.sleep(0.3)
-
-# Cure
-# def Cure():
-#     PressKey(A)
-#     time.sleep(1.4)
-#     ReleaseKey(A)
-#     time.sleep(0.1)
-    
-# Restart function
-# it restart a new game
-# it is not in actions space
-# def Look_up():
-#     PressKey(UP_ARROW)
-#     time.sleep(0.1)
-#     ReleaseKey(UP_ARROW)
-
-# def restart():
-#     station_size = (230, 230, 1670, 930)
-#     while True:
-#         station = cv2.resize(cv2.cvtColor(grab_screen(station_size), cv2.COLOR_RGBA2RGB),(1000,500))
-#         if station[187][300][0] != 0: 
-#             time.sleep(1)
-#         else:
-#             break
-#     time.sleep(1)
-#     Look_up()
-#     time.sleep(1.5)
-#     Look_up()
-#     time.sleep(1)
-#     while True:
-#         station = cv2.resize(cv2.cvtColor(grab_screen(station_size), cv2.COLOR_RGBA2RGB),(1000,500))
-#         if station[187][612][0] > 200: 
-#             # PressKey(DOWN_ARROW)
-#             # time.sleep(0.1)
-#             # ReleaseKey(DOWN_ARROW)
-#             PressKey(C)
-#             time.sleep(0.1)
-#             ReleaseKey(C)
-#             break
-#         else:
-#             Look_up()
-#             time.sleep(0.2)
 
 def restart(self_hp, enemies_count):
     if(self_hp < 0):
@@ -258,6 +168,30 @@ def play():
     Nothing()
     time.sleep(1)
     Interact()
+
+def Reload_Map():
+    # 打开开发者菜单
+    OpenDevMenu()
+    time.sleep(0.1)
+    # 向下一次
+    Turn_Down()
+    time.sleep(0.1)
+    # 向右一次
+    Turn_Right()
+    time.sleep(0.1)
+    # 按C键确认
+    Jump()
+    time.sleep(0.1)
+    # 再次触发该函数，就是关闭开发者菜单
+    OpenDevMenu()
+    
+# 将开发者菜单调节至地图选择页面
+def Init_DevMenu_T0_MapSelect():
+    OpenDevMenu()
+    time.sleep(0.1)
+    Jump()
+    time.sleep(0.1)
+    OpenDevMenu()
 
 # List for action functions
 Actions = [Attack, Jump, Rush, Skill_A, Skill_S]

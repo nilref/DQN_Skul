@@ -2,8 +2,11 @@ import time
 from Tool.Actions import *
 
 time.sleep(2)
-restart(100, 0)
-play()
+
+Reload_Map()
+
+# restart(100, 0)
+# play()
 
 # Attack()
 # time.sleep(1)

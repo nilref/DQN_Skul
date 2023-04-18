@@ -47,24 +47,26 @@ move_name = ["Move_Left", "Move_Right", "Turn_Left", "Turn_Right", "Turn_Up", "T
 
 DELAY_REWARD = 1
 
-def run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct,PASS_COUNT,paused):
-    restart(hp.get_self_hp(),hp.get_enemies_count())
+def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_COUNT, paused, LAST_DONE):
+    Tool.Actions.Reload_Map()
+    # 重新开始新游戏，返回城堡
+    # restart(hp.get_self_hp(),hp.get_enemies_count())
+    # #从城堡出发
+    # play()
     # learn while load game
-    for i in range(8):
-        if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
-            print("move learning while load game")
-            batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
-            algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)   
+    # for i in range(8):
+    #     if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
+    #         print("move learning while load game")
+    #         batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
+    #         algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)   
 
-        if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
-            print("action learning while load game")
-            batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
-            algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
-    #从城堡出发
-    play()
-    
+    #     if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
+    #         print("action learning while load game")
+    #         batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
+    #         algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
+
+    done = 0 #1-玩家死亡 2-敌人清理完毕 3-超时未结束战斗 4-血量低于安全线(20)
     step = 0
-    done = 0
     total_reward = 0
 
     start_time = time.time()
@@ -146,7 +148,10 @@ def run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct,PASS_COUNT
         tasktime = time.time() - start_time
         # 2分钟强制结束，敌人没有全部消灭，判定任务失败（角色死亡）
         if(tasktime >= 120):
-            done = 1 
+            done = 3
+            # 超时各扣十分
+            move_reward = -10
+            act_reward = -10
         print("用时: ", tasktime, " action: ", action_name[action] ,"act_reward: " ,act_reward, " move: ", move_name[move], "move_reward: ", move_reward)
         
         DelayMoveReward.append(move_reward)
@@ -181,8 +186,8 @@ def run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct,PASS_COUNT
 
         total_reward += act_reward
         paused = Tool.Helper.pause_game(paused)
-        
-        if done == 1:
+        LAST_DONE = done
+        if done == 1 or done == 3 or done == 4:
             Tool.Actions.Nothing()
             break
         elif done == 2:
@@ -190,10 +195,12 @@ def run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct,PASS_COUNT
             Tool.Actions.Nothing()
             time.sleep(3)
             break
-        
 
     thread1.stop()
 
+    # 暂停游戏开始学习
+    Tool.Actions.Esc()
+    
     for i in range(8):
         if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
             print("move learning while end game")
@@ -213,8 +220,10 @@ def run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct,PASS_COUNT
     #     # print("action learning")
     #     batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_wrong.sample(1)
     #     algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
-
-    return total_reward, step, PASS_COUNT, self_hp
+    
+    # 学习结束，取消暂停游戏
+    Tool.Actions.Esc()
+    return total_reward, step, PASS_COUNT, self_hp, LAST_DONE
 
 
 if __name__ == '__main__':
@@ -239,7 +248,7 @@ if __name__ == '__main__':
 
     model.load_model()
     algorithm = DQN(model, gamma=GAMMA, learnging_rate=LEARNING_RATE)
-    agent = Agent(ACTION_DIM,algorithm,e_greed=0.52,e_greed_decrement=1e-6)
+    agent = Agent(ACTION_DIM,algorithm,e_greed=0.75,e_greed_decrement=1e-6)
     
     # get user input, no need anymore
     # user = User()
@@ -248,17 +257,21 @@ if __name__ == '__main__':
     paused = True
     paused = Tool.Helper.pause_game(paused)
 
+    # 将开发者菜单调节至地图选择页面
+    Tool.Actions.Init_DevMenu_T0_MapSelect()
+    
     max_episode = 30000
     # 开始训练
     episode = 0
-    PASS_COUNT = 0                                       # pass count
+    PASS_COUNT = 0   # pass count
+    LAST_DONE = 0
     while episode < max_episode:    # 训练max_episode个回合，test部分不计算入episode数量
         # 训练
         episode += 1     
         # if episode % 20 == 1:
         #     algorithm.replace_target()
 
-        total_reward, total_step, PASS_COUNT, remind_hp = run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct, PASS_COUNT, paused)
+        total_reward, total_step, PASS_COUNT, remind_hp, LAST_DONE = run_episode(hp, algorithm,agent,act_rmp_correct, move_rmp_correct, PASS_COUNT, paused, LAST_DONE)
         if episode % 10 == 1:
             model.save_mode()
         if episode % 5 == 0:
