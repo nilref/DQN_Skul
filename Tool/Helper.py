@@ -123,7 +123,7 @@ def action_judge(self_blood, next_self_blood, enemies_count, next_enemies_count)
     elif next_enemies_count <= 0:
         # 敌人杀光
         done = 2
-    elif next_self_blood <= 20:
+    elif next_self_blood <= 50:
         # 玩家hp低于安全线
         done = 4
     else:

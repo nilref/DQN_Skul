@@ -68,7 +68,7 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
     #         batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
     #         algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
 
-    done = 0 #1-玩家死亡 2-敌人清理完毕 3-超时未结束战斗 4-血量低于安全线(20)
+    done = 0 #1-玩家死亡 2-敌人清理完毕 3-超时未结束战斗 4-血量低于安全线
     step = 0
     total_reward = 0
 
@@ -251,7 +251,7 @@ if __name__ == '__main__':
 
     model.load_model()
     algorithm = DQN(model, gamma=GAMMA, learnging_rate=LEARNING_RATE)
-    agent = Agent(ACTION_DIM,algorithm,e_greed=0.75,e_greed_decrement=1e-6)
+    agent = Agent(ACTION_DIM,algorithm,e_greed=0.65,e_greed_decrement=1e-6)
     
     # get user input, no need anymore
     # user = User()

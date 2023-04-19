@@ -13,7 +13,7 @@ class Agent:
 
         pred_move, pred_act = self.algorithm.model.predict(station)
         # print(pred_move)
-        # print(self.e_greed)
+        print("self.e_greed:", self.e_greed)
         pred_move = pred_move.numpy()
         pred_act = pred_act.numpy()
 
