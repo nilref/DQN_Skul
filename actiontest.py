@@ -3,7 +3,8 @@ from Tool.Actions import *
 
 time.sleep(2)
 
-Reload_Map()
+Init_DevMenu_T0_MapSelect()
+# Reload_Map()
 
 # restart(100, 0)
 # play()

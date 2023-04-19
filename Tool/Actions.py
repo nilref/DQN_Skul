@@ -221,6 +221,16 @@ def Init_DevMenu_T0_MapSelect():
     time.sleep(0.1)
     Jump()
     time.sleep(0.1)
+    Turn_Right()
+    time.sleep(0.1)
+    Turn_Right()
+    time.sleep(0.1)
+    Turn_Right()
+    time.sleep(0.1)
+    Turn_Down()
+    time.sleep(0.1)
+    Jump()
+    time.sleep(0.1)
     OpenDevMenu()
 
 # List for action functions
