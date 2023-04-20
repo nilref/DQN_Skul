@@ -27,8 +27,8 @@ from Tool.FrameBuffer import FrameBuffer
 # window_size = (0,0,1280, 720)
 station_size = (5, 30, 1285, 750)
 
-WIDTH = 400
-HEIGHT = 200
+WIDTH = 600
+HEIGHT = 330
 ACTION_DIM = 5
 MOVE_DIM = 6
 FRAMEBUFFERSIZE = 4
@@ -36,8 +36,8 @@ INPUT_SHAPE = (FRAMEBUFFERSIZE, HEIGHT, WIDTH, 3)
 
 LEARN_FREQ = 30  # 训练频率，不需要每一个step都learn，攒一些新增经验后再learn，提高效率
 MEMORY_SIZE = 256  # replay memory的大小，越大越占用内存
-MEMORY_WARMUP_SIZE = 24  # replay_memory 里需要预存一些经验数据，再从里面sample一个batch的经验让agent去learn
-BATCH_SIZE = 24  # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
+MEMORY_WARMUP_SIZE = 15  # replay_memory 里需要预存一些经验数据，再从里面sample一个batch的经验让agent去learn
+BATCH_SIZE = 15  # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
 LEARNING_RATE = 0.00001  # 学习率
 GAMMA = 0.99  # reward 的衰减因子，一般取 0.9 到 0.999 不等
 

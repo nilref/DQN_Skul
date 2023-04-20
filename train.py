@@ -41,9 +41,8 @@ BATCH_SIZE = 15  # 每次给agent learn的数据数量，从replay memory随机�
 LEARNING_RATE = 0.00001  # 学习率
 GAMMA = 0
 
-action_name = ["Attack", "Jump", "Rush", "Skill_A", "Skill_S"]
-
 move_name = ["Move_Left", "Move_Right", "Turn_Left", "Turn_Right", "Turn_Up", "Turn_Down"]
+action_name = ["Attack", "Jump", "Rush", "Skill_A", "Skill_S"]
 
 DELAY_REWARD = 1
 
@@ -255,7 +254,7 @@ if __name__ == '__main__':
 
     model.load_model()
     algorithm = DQN(model, gamma=GAMMA, learnging_rate=LEARNING_RATE)
-    agent = Agent(ACTION_DIM,algorithm,e_greed=0.65,e_greed_decrement=1e-6)
+    agent = Agent(ACTION_DIM,algorithm,e_greed=0.75,e_greed_decrement=1e-6)
     
     # get user input, no need anymore
     # user = User()
