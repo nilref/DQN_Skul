@@ -25,7 +25,7 @@ class Agent:
             # print("random move")
             # move = random.randint(0, 5)
             print("周期性定向移动 self.move_flag:", self.move_flag)
-            if self.move_flag % 25 == 0:
+            if self.move_flag % 10 == 0:
                 if self.move_flag % 2 == 0:
                     move = 2
                 elif self.move_flag % 3 == 0:
