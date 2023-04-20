@@ -36,6 +36,7 @@ class Agent:
                     move = 5
                 self.next_move = 0 if self.next_move == 1 else 1
             move = self.next_move
+            self.move_flag += 1
             
         else:
             move = np.argmax(pred_move)
