@@ -91,22 +91,22 @@ if __name__ == '__main__':
             act_rmp_correct.load(file_name)
             for i in range(10):
                 if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
-                    print("action learning:",x)
+                    print(episode,"action learning:",x)
                     batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
                     algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
             model.save_mode()
-            print("save_mode")
+            print(episode,"save_mode")
 
         for x in os.listdir(move_rmp_correct.file_name):
             file_name = move_rmp_correct.file_name + "/" + x
             move_rmp_correct.load(file_name)
             for i in range(10):
                 if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
-                    print("move learning:",x)
+                    print(episode,"move learning:",x)
                     batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
                     algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
             model.save_mode()
-            print("save_mode")
+            print(episode,"save_mode")
         
         episode += 1
         
