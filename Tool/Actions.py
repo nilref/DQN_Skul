@@ -134,8 +134,8 @@ def Interact():
     time.sleep(0.1)
     ReleaseKey(F)
 
-def restart(self_hp, enemies_count):
-    if(self_hp < 0):
+def restart(self_hp):
+    if self_hp < 0:
         # 按X重开
         Attack()
     else:
@@ -169,7 +169,12 @@ def play():
     time.sleep(1)
     Interact()
 
-def Reload_Map():
+def Reload_Map(self_hp):
+    if self_hp < 0:
+        # 按X重开，有一定几率会死亡，直接reloadmap会出bug
+        Attack()
+        time.sleep(4)
+        
     # 打开开发者菜单，切换地图
     OpenDevMenu()
     time.sleep(0.1)

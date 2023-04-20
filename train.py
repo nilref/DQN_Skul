@@ -15,9 +15,8 @@ from ReplayMemory import ReplayMemory
 
 
 import Tool.Helper
-import Tool.Actions
-from Tool.Helper import mean, is_end
-from Tool.Actions import take_action, restart, play, take_direction, TackAction
+from Tool.Helper import *
+from Tool.Actions import *
 from Tool.WindowsAPI import grab_screen
 from Tool.PlayerData import Hp_getter
 from Tool.UserInput import User
@@ -49,13 +48,13 @@ DELAY_REWARD = 1
 def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_COUNT, paused, LAST_DONE):
     if LAST_DONE == 0 or LAST_DONE == 1:
         # 重新开始新游戏，返回城堡
-        restart(hp.get_self_hp(),hp.get_enemies_count())
+        restart(hp.get_self_hp())
         # 从城堡出发
         # play()
         # 直接进入地图战斗
-        Tool.Actions.Reload_Map()
+        Reload_Map(hp.get_self_hp())
     else:
-        Tool.Actions.Reload_Map()
+        Reload_Map(hp.get_self_hp())
 
     # learn while load game
     # for i in range(8):
@@ -194,18 +193,19 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
         
         LAST_DONE = done
         if done == 1 or done == 3 or done == 4:
-            Tool.Actions.Nothing()
+            Nothing()
+            agent.reset_move_flag()
             break
         elif done == 2:
             PASS_COUNT += 1
-            Tool.Actions.Nothing()
+            Nothing()
             time.sleep(3)
             break
 
     thread1.stop()
 
     # 暂停游戏开始学习
-    Tool.Actions.Esc()
+    Esc()
     
     for i in range(8):
         if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
@@ -228,7 +228,7 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
     #     algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
     
     # 学习结束，取消暂停游戏
-    Tool.Actions.Esc()
+    Esc()
     return total_reward, step, PASS_COUNT, self_hp, LAST_DONE
 
 
@@ -264,7 +264,7 @@ if __name__ == '__main__':
     paused = Tool.Helper.pause_game(paused)
 
     # 将开发者菜单调节至地图选择页面
-    Tool.Actions.Init_DevMenu_T0_MapSelect()
+    Init_DevMenu_T0_MapSelect()
     
     max_episode = 30000
     # 开始训练

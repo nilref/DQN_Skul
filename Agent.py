@@ -54,3 +54,7 @@ class Agent:
         self.e_greed = max(
             0.03, self.e_greed - self.e_greed_decrement)
         return move, act
+    
+    def reset_move_flag(self):
+        print("重置self.move_flag参数")
+        self.move_flag = 1
