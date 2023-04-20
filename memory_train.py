@@ -55,9 +55,9 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True      #程序按需申请内存
     sess = tf.compat.v1.Session(config = config)
 
-    devices = sess.list_devices()
-    for d in devices:
-      print(d.name)
+    # devices = sess.list_devices()
+    # for d in devices:
+    #   print(d.name)
 
     PASS_COUNT = 0                                       # pass count
     total_remind_hp = 0
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     model = Model(INPUT_SHAPE, ACTION_DIM, MOVE_DIM)  
 
     # Hp counter
-    hp = Hp_getter()
+    # hp = Hp_getter()
 
 
     model.load_model()
@@ -84,26 +84,32 @@ if __name__ == '__main__':
 
     # 开始训练
     episode = 0
+    max_episode = 100
+    while episode < max_episode:
+        for x in os.listdir(act_rmp_correct.file_name):
+            file_name = act_rmp_correct.file_name + "/" + x
+            act_rmp_correct.load(file_name)
+            for i in range(10):
+                if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
+                    print("action learning:",x)
+                    batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
+                    algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
+            model.save_mode()
+            print("save_mode")
 
-    for x in os.listdir(act_rmp_correct.file_name):
-        file_name = act_rmp_correct.file_name + "/" + x
-        act_rmp_correct.load(file_name)
-        for i in range(10):
-            if (len(act_rmp_correct) > MEMORY_WARMUP_SIZE):
-                print("action learning")
-                batch_station,batch_actions,batch_reward,batch_next_station,batch_done = act_rmp_correct.sample(BATCH_SIZE)
-                algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
-
-    for x in os.listdir(move_rmp_correct.file_name):
-        file_name = move_rmp_correct.file_name + "/" + x
-        move_rmp_correct.load(file_name)
-        for i in range(10):
-            if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
-                print("action learning")
-                batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
-                algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
-
-    model.save_mode()
+        for x in os.listdir(move_rmp_correct.file_name):
+            file_name = move_rmp_correct.file_name + "/" + x
+            move_rmp_correct.load(file_name)
+            for i in range(10):
+                if (len(move_rmp_correct) > MEMORY_WARMUP_SIZE):
+                    print("move learning:",x)
+                    batch_station,batch_actions,batch_reward,batch_next_station,batch_done = move_rmp_correct.sample(BATCH_SIZE)
+                    algorithm.move_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
+            model.save_mode()
+            print("save_mode")
+        
+        episode += 1
+        
     # while episode < max_episode:    # 训练max_episode个回合，test部分不计算入episode数量
     #     # 训练
            

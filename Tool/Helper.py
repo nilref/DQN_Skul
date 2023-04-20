@@ -25,7 +25,7 @@ def count_self_reward(next_self_blood, self_hp):
 
 def count_enemies_count_reward(next_enemies_count, enemies_count):
     if next_enemies_count - enemies_count < 0:
-        return 5 * (enemies_count - next_enemies_count)
+        return 100 * (enemies_count - next_enemies_count)
     return 0
 
 # count boss hp change, and give reward 
@@ -110,9 +110,10 @@ def distance_reward(move, next_player_x, next_hornet_x):
 #     # reward = direction_reward(move, player_x, hornet_x) + distance_reward(move, player_x, hornet_x)
 #     return -10
 
-def move_judge(self_blood, next_self_blood):
+def move_judge(self_blood, next_self_blood, enemies_count, next_enemies_count):
     self_blood_reward = count_self_reward(next_self_blood, self_blood)
-    return self_blood_reward
+    enemies_count_reward = count_enemies_count_reward(next_enemies_count, enemies_count)
+    return self_blood_reward + enemies_count_reward
 
 def action_judge(self_blood, next_self_blood, enemies_count, next_enemies_count):
     self_blood_reward = count_self_reward(next_self_blood, self_blood)

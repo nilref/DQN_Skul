@@ -28,8 +28,8 @@ from Tool.FrameBuffer import FrameBuffer
 # window_size = (0,0,1280, 720)
 station_size = (5, 30, 1285, 750)
 
-WIDTH = 400
-HEIGHT = 200
+WIDTH = 600
+HEIGHT = 330
 ACTION_DIM = 5
 MOVE_DIM = 6
 FRAMEBUFFERSIZE = 4
@@ -37,7 +37,7 @@ INPUT_SHAPE = (FRAMEBUFFERSIZE, HEIGHT, WIDTH, 3)
 
 MEMORY_SIZE = 256  # replay memory的大小，越大越占用内存
 MEMORY_WARMUP_SIZE = 24  # replay_memory 里需要预存一些经验数据，再从里面sample一个batch的经验让agent去learn
-BATCH_SIZE = 10  # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
+BATCH_SIZE = 15  # 每次给agent learn的数据数量，从replay memory随机里sample一批数据出来
 LEARNING_RATE = 0.00001  # 学习率
 GAMMA = 0
 
@@ -52,7 +52,9 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
         # 重新开始新游戏，返回城堡
         restart(hp.get_self_hp(),hp.get_enemies_count())
         # 从城堡出发
-        play()
+        # play()
+        # 直接进入地图战斗
+        Tool.Actions.Reload_Map()
     else:
         Tool.Actions.Reload_Map()
 
@@ -143,7 +145,7 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
 
         # get reward
         # move_reward = Tool.Helper.move_judge(self_hp, next_self_hp, player_x, next_player_x, hornet_x, next_hornet_x, move, hornet_skill1)
-        move_reward = Tool.Helper.move_judge(self_hp, next_self_hp)
+        move_reward = Tool.Helper.move_judge(self_hp, next_self_hp, enemies_count, next_enemies_count)
         # print(move_reward)
         act_reward, done = Tool.Helper.action_judge(self_hp, next_self_hp, enemies_count, next_enemies_count)
         # print(reward)
@@ -155,7 +157,7 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
             # 超时各扣十分
             move_reward = -10
             act_reward = -10
-        print("用时: ", tasktime, " action: ", action_name[action] ,"act_reward: " ,act_reward, " move: ", move_name[move], "move_reward: ", move_reward)
+        print("time: ", tasktime, " action: ", action_name[action] ,"act_reward: " ,act_reward, " move: ", move_name[move], "move_reward: ", move_reward)
         
         DelayMoveReward.append(move_reward)
         DelayActReward.append(act_reward)
@@ -188,7 +190,9 @@ def run_episode(hp, algorithm, agent, act_rmp_correct, move_rmp_correct, PASS_CO
         #     algorithm.act_learn(batch_station,batch_actions,batch_reward,batch_next_station,batch_done)
 
         total_reward += act_reward
+            
         paused = Tool.Helper.pause_game(paused)
+        
         LAST_DONE = done
         if done == 1 or done == 3 or done == 4:
             Tool.Actions.Nothing()

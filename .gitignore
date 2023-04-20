@@ -3,8 +3,8 @@
 /model/
 /OLD_FILE/
 /abyss/
-/act_memory/
-/move_memory/
+/act_memory*/
+/move_memory*/
 /__pycache__/
 ./__pycache__
 /test_img/
